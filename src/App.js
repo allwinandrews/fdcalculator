@@ -12,8 +12,8 @@ import {
   Row,
   Col
 } from "reactstrap";
-import ReactGA from 'react-ga';
-ReactGA.initialize('UA-153097308-1');
+import ReactGA from "react-ga";
+ReactGA.initialize("UA-153097308-1");
 ReactGA.pageview(window.location.pathname + window.location.search);
 
 export default function App() {
@@ -57,7 +57,8 @@ export default function App() {
   };
 
   const timeFrame = (period, count) => {
-    setFdData(...fdData, { time_frame: period });
+    const data = { ...fdData, ...{ time_frame: period } };
+    setFdData(data);
     setTimeValue(count);
   };
 
@@ -123,28 +124,32 @@ export default function App() {
           Submit
         </Button>
       </Form>
-      <Table>
-        <thead>
-          <tr>
-            <th>Invested Amount</th>
-            <th>Maturity Amount</th>
-            <th>FD Period</th>
-            <th>Interest (%)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {fdDataList.map((obj, i) => (
-            <tr key={i + 1}>
-              <td>{obj.deposit_amount}</td>
-              <td>{obj.maturity_amount}</td>
-              <td>
-                {obj.period}({obj.time_frame})
-              </td>
-              <td>{obj.interest_rate}</td>
+      {fdDataList.length ? (
+        <Table>
+          <thead>
+            <tr>
+              <th>Invested Amount</th>
+              <th>Maturity Amount</th>
+              <th>FD Period</th>
+              <th>Interest (%)</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {fdDataList.slice(0).reverse().map((obj, i) => (
+              <tr key={i + 1}>
+                <td>{obj.deposit_amount}</td>
+                <td>{obj.maturity_amount}</td>
+                <td>
+                  {obj.period}({obj.time_frame})
+                </td>
+                <td>{obj.interest_rate}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      ) : (
+        ""
+      )}
     </Container>
   );
 }
