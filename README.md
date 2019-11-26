@@ -1,1 +1,1 @@
-# fdcalculator
+# fdcalculator (npm run build && firebase deploy)
