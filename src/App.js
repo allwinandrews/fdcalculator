@@ -53,15 +53,19 @@ export default function App() {
       maturity_amount: "",
       time_frame: "Years"
     });
+    setTimeValue(1);
     setFdDataList(list);
   };
 
-  const timeFrame = (period, count) => {
-    const data = { ...fdData, ...{ time_frame: period } };
+  const timeFrame = (yymmdd, count) => {
+    const { period } = fdData;
+    const decimal_time = count === 1 && period % 1 !== 0 ? 12 * period : count;
+    const data = { ...fdData, ...{ time_frame: yymmdd } };
     setFdData(data);
-    setTimeValue(count);
+    setTimeValue(decimal_time);
   };
 
+  const { deposit_amount, period, time_frame, interest_rate } = fdData;
   return (
     <Container>
       <Form id="fixed-deposit">
@@ -70,7 +74,7 @@ export default function App() {
           <Col sm="12" md={{ size: 6, offset: 3 }}>
             <Input
               name="deposit_amount"
-              value={fdData.deposit_amount}
+              value={deposit_amount}
               onChange={handleChange}
               placeholder="FD Amount (Rs.)"
             />
@@ -88,12 +92,12 @@ export default function App() {
           >
             <Input
               name="period"
-              value={fdData.period}
+              value={period}
               onChange={handleChange}
               placeholder="FD Period"
             />
             <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-              <DropdownToggle caret>{fdData.time_frame}</DropdownToggle>
+              <DropdownToggle caret>{time_frame}</DropdownToggle>
               <DropdownMenu>
                 <DropdownItem onClick={() => timeFrame("Years", 1)}>
                   Years
@@ -114,7 +118,7 @@ export default function App() {
           <Col sm="12" md={{ size: 6, offset: 3 }}>
             <Input
               name="interest_rate"
-              value={fdData.interest_rate}
+              value={interest_rate}
               onChange={handleChange}
               placeholder="Interest (%)"
             />
@@ -135,16 +139,19 @@ export default function App() {
             </tr>
           </thead>
           <tbody>
-            {fdDataList.slice(0).reverse().map((obj, i) => (
-              <tr key={i + 1}>
-                <td>{obj.deposit_amount}</td>
-                <td>{obj.maturity_amount}</td>
-                <td>
-                  {obj.period}({obj.time_frame})
-                </td>
-                <td>{obj.interest_rate}</td>
-              </tr>
-            ))}
+            {fdDataList
+              .slice(0)
+              .reverse()
+              .map((obj, i) => (
+                <tr key={i + 1}>
+                  <td>{obj.deposit_amount}</td>
+                  <td>{obj.maturity_amount}</td>
+                  <td>
+                    {obj.period}({obj.time_frame})
+                  </td>
+                  <td>{obj.interest_rate}</td>
+                </tr>
+              ))}
           </tbody>
         </Table>
       ) : (
